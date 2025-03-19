@@ -22,7 +22,7 @@
     "globalName": "tansa_app",
     "pluginVersion": "0.8.12",
     "prefetchInterface": false,
-    "publicPath": "/tansa-app"
+    "publicPath": "/tansa-app/"
   },
   "shared": [
     {
