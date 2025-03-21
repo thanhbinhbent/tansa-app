@@ -15,11 +15,9 @@ const App = () => {
   }, []);
 
   return (
-    <div className="container">
-      <ExchangeRateContext.Provider value={exchangeRates}>
-        <SalaryConverter />
-      </ExchangeRateContext.Provider>{" "}
-    </div>
+    <ExchangeRateContext.Provider value={exchangeRates}>
+      <SalaryConverter />
+    </ExchangeRateContext.Provider>
   );
 };
 
