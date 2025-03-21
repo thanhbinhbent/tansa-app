@@ -1,4 +1,6 @@
+import { useState, useEffect } from "react";
 import { Table, Collapse, Typography, theme } from "antd";
+import { convertAmount } from "../utils/currency";
 
 const { Text } = Typography;
 const { useToken } = theme;
@@ -9,6 +11,19 @@ export default function SalaryBreakdownTable({
   breakdown: any;
 }) {
   const { token } = useToken();
+  const [exchangeRates, setExchangeRates] = useState<Record<string, number>>(
+    {}
+  );
+  const [selectedCurrency, setSelectedCurrency] = useState<string>(
+    localStorage.getItem("selectedCurrency") || "USD"
+  );
+
+  useEffect(() => {
+    const cachedRates = localStorage.getItem("exchangeRates");
+    if (cachedRates) {
+      setExchangeRates(JSON.parse(cachedRates));
+    }
+  }, []);
 
   const dataSource = [
     {
@@ -59,13 +74,22 @@ export default function SalaryBreakdownTable({
       render: (text: string) => <Text strong>{text}</Text>,
     },
     {
-      title: "Giá trị (VNĐ)",
+      title: "Giá trị",
       dataIndex: "value",
       key: "value",
       render: (value: number, record: any) => (
-        <Text style={{ color: record.color || "inherit" }}>
-          {value.toLocaleString("vi-VN")}
-        </Text>
+        <div>
+          <Text style={{ color: record.color || "inherit" }}>
+            {value.toLocaleString("vi-VN")} VNĐ
+          </Text>
+          <br />
+          <Text type="secondary">
+            {exchangeRates[selectedCurrency]
+              ? convertAmount(value, exchangeRates, selectedCurrency) +
+                ` ${selectedCurrency}`
+              : "Đang tải..."}
+          </Text>
+        </div>
       ),
     },
   ];

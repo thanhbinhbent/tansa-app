@@ -52,12 +52,13 @@ export function calculateTax(monthlyTaxableIncome: number): number {
 
 export function getDetailedBreakdownFromGross(
   gross: number,
-  dependents: number
+  dependents: number,
+  insuranceSalary: number = gross
 ): DetailedSalaryBreakdown {
-  const socialBase = Math.min(gross, 46_800_000);
+  const socialBase = Math.min(insuranceSalary, 46_800_000);
   const socialInsurance = socialBase * 0.08;
   const healthInsurance = socialBase * 0.015;
-  const unemploymentInsurance = Math.min(gross, 99_200_000) * 0.01;
+  const unemploymentInsurance = Math.min(insuranceSalary, 99_200_000) * 0.01;
   const totalInsurance = Math.round(
     socialInsurance + healthInsurance + unemploymentInsurance
   );
@@ -87,18 +88,27 @@ export function getDetailedBreakdownFromGross(
 export function getDetailedBreakdown(
   salary: number,
   dependents: number,
-  inputType: ConversionType
+  inputType: ConversionType,
+  insuranceSalary: number = salary
 ): DetailedSalaryBreakdown {
   if (inputType === ConversionType.GrossToNet) {
-    return getDetailedBreakdownFromGross(salary, dependents);
+    return getDetailedBreakdownFromGross(salary, dependents, insuranceSalary);
   }
   let grossGuess = salary * 1.2;
-  let breakdown = getDetailedBreakdownFromGross(grossGuess, dependents);
+  let breakdown = getDetailedBreakdownFromGross(
+    grossGuess,
+    dependents,
+    insuranceSalary
+  );
   for (let i = 0; i < 100; i++) {
     const error = salary - breakdown.netSalary;
     if (Math.abs(error) < 1) break;
     grossGuess += error;
-    breakdown = getDetailedBreakdownFromGross(grossGuess, dependents);
+    breakdown = getDetailedBreakdownFromGross(
+      grossGuess,
+      dependents,
+      insuranceSalary
+    );
   }
   return breakdown;
 }

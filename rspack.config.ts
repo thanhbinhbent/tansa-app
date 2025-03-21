@@ -21,7 +21,7 @@ export default defineConfig({
   },
 
   devServer: {
-    port: 8080,
+    port: 8081,
     historyApiFallback: true,
     watchFiles: [path.resolve(__dirname, "src")],
   },
@@ -29,7 +29,7 @@ export default defineConfig({
     // You need to set a unique value that is not equal to other applications
     uniqueName: "tansa_app",
     // publicPath must be configured if using manifest
-    publicPath: "/tansa-app/",
+    // publicPath: "/tansa-app/",
   },
 
   experiments: {

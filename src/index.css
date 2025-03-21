@@ -3,10 +3,12 @@ body {
 }
 
 .container {
-  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 .salary-converter-container {
-  min-height: 100vh;
   width: 100%;
   padding: 24px;
 }
@@ -16,11 +18,11 @@ body {
 }
 
 .salary-converter-column-left {
-  min-width: 320px;
+  min-width: 240px;
 }
 
 .salary-converter-column-right {
-  min-width: 320px;
+  min-width: 380px;
 }
 
 .header {

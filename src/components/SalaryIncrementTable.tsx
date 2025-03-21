@@ -1,10 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Table, Input, Typography, Space, Flex, Collapse, Button } from "antd";
 import { ConversionType } from "../utils/taxHandler";
-import {
-  calculateSalaryIncrements,
-  formatCurrency,
-} from "../utils/salaryIncreasment";
+import { calculateSalaryIncrements } from "../utils/salaryIncreasment";
+import { convertAmount, getExchangeRates } from "../utils/currency";
 
 const { Text } = Typography;
 
@@ -19,17 +17,21 @@ export default function SalaryIncrementTable({
   baseSalary,
   conversionType,
   dependents = 0,
-  percentageIncreases = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50],
+  percentageIncreases = [10, 15, 20, 25, 30],
 }: SalaryIncrementTableProps) {
   const [customIncrease, setCustomIncrease] = useState<string>("");
   const [customRow, setCustomRow] = useState<any | null>(null);
-
-  const increments = calculateSalaryIncrements(
-    baseSalary,
-    percentageIncreases,
-    conversionType,
-    dependents
+  const [selectedCurrency, setSelectedCurrency] = useState<string>(
+    localStorage.getItem("selectedCurrency") || "USD"
   );
+  const [exchangeRates, setExchangeRates] = useState<Record<string, number>>(
+    {}
+  );
+
+  // Gọi API để lấy tỷ giá khi component mount
+  useEffect(() => {
+    getExchangeRates(setExchangeRates);
+  }, []);
 
   const handleCalculateCustomIncrease = () => {
     const parsedIncrease = parseFloat(customIncrease);
@@ -39,8 +41,7 @@ export default function SalaryIncrementTable({
         [parsedIncrease],
         conversionType,
         dependents
-      )[0]; // Chỉ lấy hàng đầu tiên
-
+      )[0];
       setCustomRow(newRow);
     } else {
       setCustomRow(null);
@@ -55,15 +56,23 @@ export default function SalaryIncrementTable({
   const dataSource = customRow
     ? [
         customRow,
-        ...increments.filter(
-          (row) => row.increasePercent !== customRow.increasePercent
-        ),
+        ...calculateSalaryIncrements(
+          baseSalary,
+          percentageIncreases,
+          conversionType,
+          dependents
+        ).filter((row) => row.increasePercent !== customRow.increasePercent),
       ]
-    : increments;
+    : calculateSalaryIncrements(
+        baseSalary,
+        percentageIncreases,
+        conversionType,
+        dependents
+      );
 
   const columns = [
     {
-      title: "Tỉ lệ tăng (%)",
+      title: "(%) tăng",
       dataIndex: "increasePercent",
       key: "increasePercent",
       render: (value: number, record: any) => (
@@ -71,23 +80,41 @@ export default function SalaryIncrementTable({
       ),
     },
     {
-      title: "Lương GROSS (VND)",
-      dataIndex: "newGrossSalary",
-      key: "newGrossSalary",
-      render: (value: number, record: any) => (
-        <Text strong={record === customRow}>{formatCurrency(value)}</Text>
+      title: "Giá trị (VND)",
+      key: "salaryDetails",
+      render: (_: any, record: any) => (
+        <Space direction="vertical">
+          <Text strong={record === customRow}>
+            GROSS: {record.newGrossSalary.toLocaleString("vi-VN")}
+          </Text>
+          <Text type="secondary">
+            {exchangeRates[selectedCurrency]
+              ? convertAmount(
+                  record.newGrossSalary,
+                  exchangeRates,
+                  selectedCurrency
+                )
+              : "Đang tải..."}{" "}
+            {selectedCurrency}
+          </Text>
+          <Text strong={record === customRow}>
+            NET: {record.newNetSalary.toLocaleString("vi-VN")}
+          </Text>
+          <Text type="secondary">
+            {exchangeRates[selectedCurrency]
+              ? convertAmount(
+                  record.newNetSalary,
+                  exchangeRates,
+                  selectedCurrency
+                )
+              : "Đang tải..."}{" "}
+            {selectedCurrency}
+          </Text>
+        </Space>
       ),
     },
     {
-      title: "Lương NET (VND)",
-      dataIndex: "newNetSalary",
-      key: "newNetSalary",
-      render: (value: number, record: any) => (
-        <Text strong={record === customRow}>{formatCurrency(value)}</Text>
-      ),
-    },
-    {
-      title: "Thao tác",
+      title: "Xoá",
       key: "actions",
       render: (_: any, record: any) =>
         record === customRow ? (
@@ -118,7 +145,6 @@ export default function SalaryIncrementTable({
               Tính
             </Button>
           </Flex>
-
           <Table
             dataSource={dataSource}
             columns={columns}

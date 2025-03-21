@@ -3,52 +3,54 @@ import { motion } from "framer-motion";
 const AnimatedWallet = () => {
   return (
     <motion.svg
-      width="150"
-      height="150"
-      viewBox="0 0 24 24"
-      fill="none"
+      className="text-gray-800 dark:text-white"
       xmlns="http://www.w3.org/2000/svg"
-      initial={{ scale: 0.9, opacity: 0.7 }}
-      animate={{ scale: 1, opacity: 1 }}
-      transition={{
-        duration: 1.5,
-        repeat: Infinity,
-        repeatType: "reverse",
-        ease: "easeInOut",
-      }}
+      width="200"
+      height="200"
+      fill="none"
+      viewBox="0 0 24 24"
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
     >
+      {/* Gradient màu động với màu chủ đạo của Ant Design */}
+      <defs>
+        <linearGradient id="gradientColor" gradientTransform="rotate(0)">
+          <motion.stop
+            offset="0%"
+            stopColor="#1677ff"
+            animate={{ stopColor: ["#1677ff", "#69b1ff", "#1677ff"] }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "linear",
+              repeatType: "mirror",
+            }}
+          />
+          <motion.stop
+            offset="100%"
+            stopColor="#69b1ff"
+            animate={{ stopColor: ["#69b1ff", "#1677ff", "#69b1ff"] }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "linear",
+              repeatType: "mirror",
+            }}
+          />
+        </linearGradient>
+      </defs>
+
       <motion.path
-        d="M3 7H21V18C21 19.1 20.1 20 19 20H5C3.9 20 3 19.1 3 18V7Z"
-        fill="#1677ff"
-        stroke="#003a8c"
-        strokeWidth="1"
-        initial={{ y: 0 }}
-        animate={{ y: [0, 2, 0] }}
-        transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
-      />
-      <motion.path
-        d="M16 7V5C16 3.9 15.1 3 14 3H5C3.9 3 3 3.9 3 5V7"
-        fill="#69c0ff"
-        stroke="#003a8c"
-        strokeWidth="1"
+        stroke="url(#gradientColor)"
         strokeLinecap="round"
-        initial={{ y: 0 }}
-        animate={{ y: [-2, 2, -2] }}
-        transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+        strokeLinejoin="round"
+        strokeWidth="1.3" // Giảm stroke nhỏ hơn
+        d="M13.6 16.733c.234.269.548.456.895.534a1.4 1.4 0 0 0 1.75-.762c.172-.615-.446-1.287-1.242-1.481-.796-.194-1.41-.861-1.241-1.481a1.4 1.4 0 0 1 1.75-.762c.343.077.654.26.888.524m-1.358 4.017v.617m0-5.939v.725M4 15v4m3-6v6M6 8.5 10.5 5 14 7.5 18 4m0 0h-3.5M18 4v3m2 8a5 5 0 1 1-10 0 5 5 0 0 1 10 0Z"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 1 }}
+        transition={{ duration: 1.5, ease: "easeInOut" }}
       />
-      <motion.rect
-        x="18"
-        y="10"
-        width="4"
-        height="4"
-        fill="#52c41a"
-        stroke="#003a8c"
-        strokeWidth="1"
-        initial={{ scale: 1 }}
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse" }}
-      />
-      <circle cx="20" cy="12" r="0.5" fill="#fff" />
     </motion.svg>
   );
 };

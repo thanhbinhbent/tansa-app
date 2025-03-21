@@ -9,13 +9,14 @@ import {
   Space,
   Divider,
   Grid,
+  Tooltip,
 } from "antd";
 import {
   getDetailedBreakdown,
   ConversionType,
   DetailedSalaryBreakdown,
 } from "../utils/taxHandler";
-import { parseNumber, formatCurrency } from "../utils/number";
+import { parseNumber, formatCurrency } from "../utils/currency";
 import "antd/dist/reset.css";
 import AnimatedWallet from "./AnimatedWallet";
 import SalaryBreakdownTable from "./SalaryBreakdownTable";
@@ -23,7 +24,7 @@ import SalaryIncrementTable from "./SalaryIncrementTable";
 import { motion } from "framer-motion";
 
 const { Title, Text } = Typography;
-const { useBreakpoint } = Grid; // Hook để lấy kích thước màn hình
+const { useBreakpoint } = Grid;
 
 export default function SalaryConverter() {
   const [salary, setSalary] = useState<number | string>("");
@@ -32,17 +33,27 @@ export default function SalaryConverter() {
   const [breakdown, setBreakdown] = useState<DetailedSalaryBreakdown | null>(
     null
   );
+  const [insuranceSalary, setInsuranceSalary] = useState<number | string>("");
 
-  const screens = useBreakpoint(); // Lấy kích thước màn hình
+  const screens = useBreakpoint();
 
   const handleConvert = () => {
     const parsedSalary = Number(salary);
     const parsedDependents = Number(dependents);
+    const parsedInsuranceSalary = Number(insuranceSalary);
 
     if (isNaN(parsedSalary) || parsedSalary <= 0) return;
     const validDependents = isNaN(parsedDependents) ? 0 : parsedDependents;
+    const validInsuranceSalary = isNaN(parsedInsuranceSalary)
+      ? parsedSalary
+      : parsedInsuranceSalary;
 
-    const result = getDetailedBreakdown(parsedSalary, validDependents, type);
+    const result = getDetailedBreakdown(
+      parsedSalary,
+      validDependents,
+      type,
+      validInsuranceSalary
+    );
     setBreakdown(result);
   };
 
@@ -78,7 +89,6 @@ export default function SalaryConverter() {
                   onChange={(e) => setSalary(parseNumber(e.target.value))}
                 />
               </Space>
-
               <Space direction="vertical" style={{ width: "100%" }}>
                 <Text strong>Số người phụ thuộc:</Text>
                 <Input
@@ -87,14 +97,25 @@ export default function SalaryConverter() {
                   onChange={(e) => setDependents(parseNumber(e.target.value))}
                 />
               </Space>
-
+              <Space direction="vertical" style={{ width: "100%" }}>
+                <Tooltip title="Chỉ nhập trong trường hợp lương đóng bảo hiểm khác với lương thực tế.">
+                  <Text strong>Mức lương đóng bảo hiểm:</Text>
+                </Tooltip>
+                <Input
+                  type="text"
+                  value={formatCurrency(insuranceSalary)}
+                  onChange={(e) =>
+                    setInsuranceSalary(parseNumber(e.target.value))
+                  }
+                />
+              </Space>
               <Space direction="vertical" style={{ width: "100%" }}>
                 <Text strong>Loại chuyển đổi:</Text>
                 <Radio.Group
                   value={type}
                   onChange={(e) => setType(e.target.value)}
                 >
-                  <Space>
+                  <Space direction="vertical">
                     <Radio value={ConversionType.GrossToNet}>GROSS ➜ NET</Radio>
                     <Radio value={ConversionType.NetToGross}>NET ➜ GROSS</Radio>
                   </Space>

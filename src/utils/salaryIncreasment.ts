@@ -1,6 +1,7 @@
 import {
   ConversionType,
   DetailedSalaryBreakdown,
+  getDetailedBreakdownFromGross,
   getDetailedBreakdown,
 } from "./taxHandler";
 
@@ -10,22 +11,17 @@ export function calculateSalaryIncrements(
   conversionType: ConversionType,
   dependents: number = 0
 ) {
-  let adjustedSalary = baseSalary;
   const salaryAdjustments = [];
 
   for (const increasePercent of percentageIncreases) {
-    adjustedSalary = Math.round(adjustedSalary * (1 + increasePercent / 100));
+    const newGrossSalary = Math.round(baseSalary * (1 + increasePercent / 100));
 
     let breakdown: DetailedSalaryBreakdown;
     if (conversionType === ConversionType.GrossToNet) {
-      breakdown = getDetailedBreakdown(
-        adjustedSalary,
-        dependents,
-        ConversionType.GrossToNet
-      );
+      breakdown = getDetailedBreakdownFromGross(newGrossSalary, dependents);
     } else {
       breakdown = getDetailedBreakdown(
-        adjustedSalary,
+        newGrossSalary,
         dependents,
         ConversionType.NetToGross
       );
