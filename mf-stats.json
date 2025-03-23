@@ -22,7 +22,7 @@
     "globalName": "tansaApp",
     "pluginVersion": "0.8.12",
     "prefetchInterface": false,
-    "publicPath": "http://localhost:8081/"
+    "publicPath": "https://thanhbinhbent.github.io/tansa-app/"
   },
   "shared": [
     {
