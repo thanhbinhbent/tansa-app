@@ -6,7 +6,20 @@ import { ModuleFederationPlugin } from "@module-federation/enhanced/rspack";
 
 import { mfConfig } from "./module-federation.config";
 
-const isDev = process.env.NODE_ENV === "development";
+const env: Record<string, string> = {
+  development: "http://localhost:8081",
+  githubPage: "https://thanhbinhbent.github.io/tansa-app",
+  staging: "https://tansa-stg.thanhbinhbent.com",
+  production: "https://tansa-prod.thanhbinhbent.com",
+};
+
+const currentEnv = (process.env.NODE_ENV || "development").trim();
+const envConfig = env[currentEnv] || env["development"];
+
+console.log("Current env: ", currentEnv);
+console.log("Current config url: ", envConfig);
+
+const isDev = currentEnv === "development";
 
 // Target browsers, see: https://github.com/browserslist/browserslist
 const targets = ["chrome >= 87", "edge >= 88", "firefox >= 78", "safari >= 14"];
@@ -35,7 +48,7 @@ export default defineConfig({
     // You need to set a unique value that is not equal to other applications
     uniqueName: "tansaApp",
     // publicPath must be configured if using manifest
-    // publicPath: "/tansa-app/",
+    publicPath: `${envConfig}/`,
   },
 
   experiments: {
