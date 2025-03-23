@@ -24,10 +24,16 @@ export default defineConfig({
     port: 8081,
     historyApiFallback: true,
     watchFiles: [path.resolve(__dirname, "src")],
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers":
+        "X-Requested-With, content-type, Authorization",
+    },
   },
   output: {
     // You need to set a unique value that is not equal to other applications
-    uniqueName: "tansa_app",
+    uniqueName: "tansaApp",
     // publicPath must be configured if using manifest
     // publicPath: "/tansa-app/",
   },
@@ -76,6 +82,11 @@ export default defineConfig({
   plugins: [
     new rspack.HtmlRspackPlugin({
       template: "./index.html",
+      favicon: "./favicon.ico",
+    }),
+    new rspack.CopyRspackPlugin({
+      // `./src/file.txt` -> `./dist/file.txt`
+      patterns: [{ from: "./meta-data.json" }],
     }),
     new ModuleFederationPlugin(mfConfig),
     isDev ? new RefreshPlugin() : null,
