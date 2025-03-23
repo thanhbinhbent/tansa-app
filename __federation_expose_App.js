@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunktansaApp=self.webpackChunktansaApp||[]).push([["874"],{5200:function(e,t,n){n.r(t),n.d(t,{ExchangeRateContext:()=>r,default:()=>p});var a=n(8269),s=n(661),u=n(9193),c=n(1671);n(557);let r=(0,s.createContext)({});function p(){let[e,t]=(0,s.useState)({});return(0,s.useEffect)(()=>{(0,c.pF)(t)},[]),(0,a.jsx)(r.Provider,{value:e,children:(0,a.jsx)(u.Z,{})})}},7780:function(e,t,n){e.exports={}},557:function(e,t,n){e.exports={}}}]);
+//# sourceMappingURL=__federation_expose_App.js.map
