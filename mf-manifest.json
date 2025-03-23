@@ -1,0 +1,114 @@
+{
+  "id": "tansaApp",
+  "name": "tansaApp",
+  "metaData": {
+    "name": "tansaApp",
+    "type": "app",
+    "buildInfo": {
+      "buildVersion": "0.0.1",
+      "buildName": "tansa-app"
+    },
+    "remoteEntry": {
+      "name": "remoteEntry.js",
+      "path": "",
+      "type": "global"
+    },
+    "types": {
+      "path": "",
+      "name": "",
+      "zip": "@mf-types.zip",
+      "api": "@mf-types.d.ts"
+    },
+    "globalName": "tansaApp",
+    "pluginVersion": "0.8.12",
+    "prefetchInterface": false,
+    "publicPath": "/tansa-app/"
+  },
+  "shared": [
+    {
+      "id": "tansaApp:react-dom",
+      "name": "react-dom",
+      "version": "19.0.0",
+      "singleton": true,
+      "requiredVersion": "^19.0.0",
+      "assets": {
+        "js": {
+          "async": [
+            "988.js"
+          ],
+          "sync": [
+            "700.js",
+            "952.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      }
+    },
+    {
+      "id": "tansaApp:react",
+      "name": "react",
+      "version": "19.0.0",
+      "singleton": true,
+      "requiredVersion": "^19.0.0",
+      "assets": {
+        "js": {
+          "async": [],
+          "sync": [
+            "988.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      }
+    }
+  ],
+  "remotes": [],
+  "exposes": [
+    {
+      "id": "tansaApp:App",
+      "name": "App",
+      "assets": {
+        "js": {
+          "sync": [
+            "596.js",
+            "503.js",
+            "__federation_expose_App.js"
+          ],
+          "async": [
+            "988.js",
+            "700.js"
+          ]
+        },
+        "css": {
+          "sync": [
+            "__federation_expose_App.css"
+          ],
+          "async": []
+        }
+      },
+      "path": "./App"
+    },
+    {
+      "id": "tansaApp:metaData",
+      "name": "metaData",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_metaData.js"
+          ],
+          "async": []
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      },
+      "path": "./metaData"
+    }
+  ]
+}
